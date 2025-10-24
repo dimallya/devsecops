@@ -32,7 +32,7 @@ resource "kubernetes_limit_range" "devsecops" {
     }
   }
 }
-resource "kubernetes_pod" "nginx" {
+resource "kubernetes_pod" "digitalbank" {
   metadata {
     labels = {
       app     = "nginx"

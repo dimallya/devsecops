@@ -32,6 +32,31 @@ resource "kubernetes_limit_range" "devsecops" {
     }
   }
 }
+resource "kubernetes_pod" "nginx" {
+  metadata {
+    labels = {
+      app     = "nginx"
+    }
+    name = "nginx-pod"
+  }
+
+  spec {
+    container {
+
+      # Missing or incorrect run_as_non_root setting
+      security_context {
+        run_as_user = 0
+      }
+
+      image = "nginx:1.7.8"
+      name  = "nginx"
+
+      port {
+        container_port = 80
+      }
+    }
+  }
+}
 
 resource "kubernetes_deployment" "digital_bank" {
   metadata {
@@ -66,10 +91,6 @@ resource "kubernetes_deployment" "digital_bank" {
           port {
             name           = "db-bank-port"
             container_port = 8443
-          }
-          
-          security_context {
-            run_as_user = 0
           }
 
           env {
@@ -197,7 +218,7 @@ resource "kubernetes_service" "digital_bank_svc" {
       app = "LoadBalancer"
     }
 
-    type = "NodePort"
+    type = "LoadBalancer"
 
     port {
       name        = "https"

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vso-test-db-app
+  namespace: argocd
+  labels:
+    test: vso-test-db-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      test: vso-test-db-app
+  template:
+    metadata:
+      labels:
+        test: vso-test-db-app
+    spec:
+      containers:
+        - name: nginx
+          image: docker.io/nginxinc/nginx-unprivileged:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "digibank-creds"
+                  key: password
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "digibank-creds"
+                  key: username
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "50Mi"

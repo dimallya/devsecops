@@ -1,0 +1,19 @@
+defaultVaultConnection:
+  enabled: true
+  address: "https://169.63.183.243:8200"
+  skipTLSVerify: true
+controller:
+  manager:
+    image:
+      repository: docker.io/hashicorp/vault-secrets-operator
+    clientCache:
+      persistenceModel: direct-encrypted
+      storageEncryption:
+        enabled: true
+        mount: openshift-auth-mount
+        keyName: vso-client-cache
+        transitMount: openshift-transit
+        kubernetes:
+          role: auth-role-operator
+          serviceAccount: vault-secrets-operator-controller-manager
+          tokenAudiences: ["vault"]

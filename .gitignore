@@ -1,0 +1,6 @@
+**/.vscode/
+**/.env
+**/.DS_Store
+
+
+vault/static-secret/vault-secrets-operator
